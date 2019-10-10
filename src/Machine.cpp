@@ -64,7 +64,7 @@ Machine& Machine::trigger( int evt /* = 0 */ ) {
  *
  */
 
-Machine& Machine::setTrace( Stream* stream, swcb_sym_t callback, const char symbols[] ) {
+Machine& Machine::setTrace( Serial0* stream, swcb_sym_t callback, const char symbols[] ) {
   callback_trace = callback;
   stream_trace = stream;
   this->symbols = symbols;

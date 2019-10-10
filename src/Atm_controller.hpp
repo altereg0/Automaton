@@ -25,8 +25,8 @@ class Atm_controller : public Machine {
   Atm_controller& OR( atm_cb_pull_t callback, int idx = 0 );
   Atm_controller& XOR( Machine& machine, char relOp = '>', int match = 0 );
   Atm_controller& XOR( atm_cb_pull_t callback, int idx = 0 );
-  Atm_controller& led( int led, bool activeLow = false );
-  Atm_controller& trace( Stream& stream );
+  Atm_controller& led( GpioPinVariable& led, bool activeLow = false );
+  Atm_controller& trace( Serial0& stream );
 
  private:
   enum { ENT_ON, ENT_OFF };                                                              // ACTIONS
@@ -35,6 +35,7 @@ class Atm_controller : public Machine {
   atm_connector connector[_CONN_SIZE_];
   atm_connector operand[ATM_CONDITION_OPERAND_MAX];
   int8_t indicator;
+  GpioPinVariable pin_;
   bool indicatorActiveLow;
   const static char relOps[];
 

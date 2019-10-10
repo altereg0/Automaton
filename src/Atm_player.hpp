@@ -12,7 +12,7 @@ class Atm_player : public Machine {
   enum { EVT_START, EVT_STOP, EVT_TOGGLE, EVT_TIMER, EVT_EOPAT, EVT_REPEAT, ELSE };  // EVENTS
   Atm_player( void ) : Machine(){};
   Atm_player& begin( int pin = -1 );
-  Atm_player& trace( Stream& stream );
+  Atm_player& trace( Serial0& stream );
   Atm_player& trigger( int event );
   int state( void );
   Atm_player& play( int* pat, int size );

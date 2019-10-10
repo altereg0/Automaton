@@ -1,4 +1,5 @@
 #include "Atm_player.hpp"
+//TODO: FIX TOTALLY
 
 /* Add optional parameters for the state machine to begin()
  * Add extra initialization code
@@ -235,7 +236,7 @@ Atm_player& Atm_player::onNote( int sub, atm_cb_push_t callback, int idx ) {
  * Sets the symbol table and the default logging method for serial monitoring
  */
 
-Atm_player& Atm_player::trace( Stream& stream ) {
+Atm_player& Atm_player::trace( Serial0& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace,
                      "PLAYER\0EVT_START\0EVT_STOP\0EVT_TOGGLE\0EVT_TIMER\0EVT_EOPAT\0EVT_REPEAT\0ELSE\0IDLE\0START\0SOUND\0QUIET\0NEXT\0REPEAT\0FINISH" );
   return *this;

@@ -1,6 +1,13 @@
 #include "Atm_analog.hpp"
+#include <Analog2Digital.h>
 
-Atm_analog& Atm_analog::begin( int attached_pin, int samplerate /* = 50 */ ) {
+// WMath prototypes
+long random(long);
+long random(long, long);
+void randomSeed(unsigned long);
+long map(long, long, long, long, long);
+
+Atm_analog& Atm_analog::begin( GpioPinVariable& attached_pin, int samplerate /* = 50 */ ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP  ON_EXIT  EVT_TRIGGER  EVT_TIMER   ELSE */
@@ -9,6 +16,9 @@ Atm_analog& Atm_analog::begin( int attached_pin, int samplerate /* = 50 */ ) {
     /* SEND   */    ENT_SEND,        -1,      -1,          -1,       -1,  IDLE,
   };
   // clang-format on
+
+  initA2D();
+
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
   timer.set( samplerate );
@@ -59,7 +69,8 @@ Atm_analog& Atm_analog::onChange( atm_cb_push_t callback, int idx /* = 0 */ ) {
 }
 
 int Atm_analog::read_sample() {
-  return analogRead( pin );
+  //return analogRead( pin ); //TODO: fix
+  return readA2D(pin.adcNbr());
 }
 
 int Atm_analog::avg() {
@@ -99,7 +110,7 @@ Atm_analog& Atm_analog::average( uint16_t* v, uint16_t size ) {
   return *this;
 }
 
-Atm_analog& Atm_analog::trace( Stream& stream ) {
+Atm_analog& Atm_analog::trace( Serial0& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "ANALOG\0EVT_TRIGGER\0EVT_TIMER\0ELSE\0"
             "IDLE\0SAMPLE\0SEND" );

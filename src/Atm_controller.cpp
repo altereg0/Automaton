@@ -1,4 +1,5 @@
 #include "Atm_controller.hpp"
+#include <string.h>
 
 const char Atm_controller::relOps[8] = "0=!<>-+";
 
@@ -31,12 +32,14 @@ void Atm_controller::action( int id ) {
   switch ( id ) {
     case ENT_OFF:
       connector[last_state == current ? ON_INPUT_FALSE : ON_CHANGE_FALSE].push( state() );
-      if ( indicator > -1 ) digitalWrite( indicator, !LOW != !indicatorActiveLow );
+//      if ( indicator > -1 ) digitalWrite( indicator, !LOW != !indicatorActiveLow );
+      if ( indicator > -1 ) writeGpioPinDigitalV(pin_, !kDigitalLow != !indicatorActiveLow ); //TODO: fix to xor
       last_state = current;
       return;
     case ENT_ON:
       if ( last_state != -1 ) connector[( last_state == current ) ? ON_INPUT_TRUE : ON_CHANGE_TRUE].push( state() );
-      if ( indicator > -1 ) digitalWrite( indicator, !HIGH != !indicatorActiveLow );
+//      if ( indicator > -1 ) digitalWrite( indicator, !HIGH != !indicatorActiveLow );
+      if ( indicator > -1 ) writeGpioPinDigitalV(pin_, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
       last_state = current;
       return;
   }
@@ -45,17 +48,17 @@ void Atm_controller::action( int id ) {
 bool Atm_controller::eval_one( atm_connector& connector ) {
   switch ( connector.relOp() ) {
     case atm_connector::REL_EQ:
-      return connector.pull() == connector.event;
+      return connector.pull() == connector.extra_.event_.event;
     case atm_connector::REL_NEQ:
-      return connector.pull() != connector.event;
+      return connector.pull() != connector.extra_.event_.event;
     case atm_connector::REL_LT:
-      return connector.pull() < connector.event;
+      return connector.pull() < connector.extra_.event_.event;
     case atm_connector::REL_GT:
-      return connector.pull() > connector.event;
+      return connector.pull() > connector.extra_.event_.event;
     case atm_connector::REL_LTE:
-      return connector.pull() <= connector.event;
+      return connector.pull() <= connector.extra_.event_.event;
     case atm_connector::REL_GTE:
-      return connector.pull() >= connector.event;
+      return connector.pull() >= connector.extra_.event_.event;
   }
   return connector.pull();
 }
@@ -80,10 +83,12 @@ bool Atm_controller::eval_all() {
   return r;
 }
 
-Atm_controller& Atm_controller::led( int led, bool activeLow /* = false */ ) {
-  indicator = led;
+Atm_controller& Atm_controller::led( GpioPinVariable& led, bool activeLow /* = false */ ) {
+  indicator = 1;
+  pin_ = led;
   indicatorActiveLow = activeLow;
-  pinMode( indicator, OUTPUT );
+//  pinMode( indicator, OUTPUT );
+  setGpioPinModeOutputV(pin_);
   return *this;
 }
 
@@ -171,7 +176,7 @@ Atm_controller& Atm_controller::OP( char logOp, atm_cb_pull_t callback, int idx 
   return *this;
 }
 
-Atm_controller& Atm_controller::trace( Stream& stream ) {
+Atm_controller& Atm_controller::trace( Serial0& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace, "CONTROLLER\0EVT_ON\0EVT_OFF\0EVT_INPUT\0ELSE\0OFF\0ON" );
   return *this;
 }

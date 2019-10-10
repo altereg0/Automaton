@@ -5,17 +5,18 @@
 
 #pragma once
 
-#include "Arduino.h"
+#include <SystemClock.h>
+#include <Writer.h>
 
 class atm_serial_debug {  // It seems necessary to put this code in .h to keep it from being compiled in unnecessarily
  public:
-  static void trace( Stream* stream, Machine& machine, const char label[], const char current[], const char next[], const char trigger[], uint32_t runtime,
+  static void trace( Serial0* stream, Machine& machine, const char label[], const char current[], const char next[], const char trigger[], uint32_t runtime,
                      uint32_t cycles ) {
     stream->print( millis() );
     stream->print( " Switch " );
     stream->print( label );
     stream->print( "@" );
-    stream->print( (long)&machine, HEX );
+    stream->print( (long)&machine, Writer::IntegerOutputBase::kHex);
     stream->print( " from " );
     stream->print( current );
     stream->print( " to " );

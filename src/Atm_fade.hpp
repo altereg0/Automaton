@@ -9,8 +9,8 @@ class Atm_fade : public Machine {
   enum { EVT_START = EVT_BLINK };
 
   Atm_fade( void ) : Machine(){};
-  Atm_fade& begin( int attached_pin );
-  Atm_fade& trace( Stream& stream );
+  Atm_fade& begin( GpioPinVariable& attached_pin );
+  Atm_fade& trace( Serial0& stream );
   Atm_fade& blink( uint32_t duration, uint32_t pause_duration, uint16_t repeat_count = ATM_COUNTER_OFF );
   Atm_fade& blink( uint32_t duration );
   Atm_fade& blink( void );
@@ -29,7 +29,7 @@ class Atm_fade : public Machine {
   enum { ENT_REPEAT, ENT_OFF, ENT_ON, ENT_UP, ENT_DOWN, ENT_START, ENT_DONE };
   static const uint8_t SLOPE_SIZE = 32;
   uint8_t slope[SLOPE_SIZE] = {0, 0, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 18, 22, 26, 31, 37, 44, 54, 63, 76, 90, 108, 127, 153, 180, 217, 230, 255};
-  short pin;
+  GpioPinVariable pin;
   uint16_t repeat_count;
   atm_connector onfinish;
   atm_timer_millis timer_fade, timer_on, timer_off;

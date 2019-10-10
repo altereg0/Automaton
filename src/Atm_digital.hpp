@@ -11,19 +11,19 @@ class Atm_digital : public Machine {
   enum { EVT_TIMER, EVT_HIGH, EVT_LOW, ELSE };  // EVENTS
 
   Atm_digital( void ) : Machine(){};
-  Atm_digital& begin( int pin, int debounce = 20, bool activeLow = false, bool pullUp = false );
+  Atm_digital& begin( GpioPinVariable& pin, int debounce = 20, bool activeLow = false, bool pullUp = false );
   int state( void );
   Atm_digital& onChange( bool status, atm_cb_push_t callback, int idx = 0 );
   Atm_digital& onChange( bool status, Machine& machine, int event = 0 );
   Atm_digital& onChange( atm_cb_push_t callback, int idx = 0 );
   Atm_digital& onChange( Machine& machine, int event = 0 );
-  Atm_digital& led( int led, bool activeLow = false );
-  Atm_digital& trace( Stream& stream );
+  Atm_digital& led( GpioPinVariable& led, bool activeLow = false );
+  Atm_digital& trace( Serial0& stream );
 
  private:
   enum { ENT_HIGH, ENT_LOW };                             // ACTIONS
   enum { ON_CHANGE_FALSE, ON_CHANGE_TRUE, _CONN_SIZE_ };  // CONNECTORS
-  short pin;
+  GpioPinVariable pin;
   atm_timer_millis timer;
   bool activeLow;
   atm_connector connection[_CONN_SIZE_];

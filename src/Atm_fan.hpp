@@ -8,7 +8,7 @@ class Atm_fan : public Machine {
   enum { EVT_INPUT, ELSE };  // EVENTS
   Atm_fan( void ) : Machine(){};
   Atm_fan& begin( void );
-  Atm_fan& trace( Stream& stream );
+  Atm_fan& trace( Serial0& stream );
   Atm_fan& trigger( int event );
   int state( void );
   Atm_fan& onInput( Machine& machine, int event = 0 );

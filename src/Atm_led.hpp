@@ -9,7 +9,7 @@ class Atm_led : public Machine {
   enum { EVT_START = EVT_BLINK };
 
   Atm_led( void ) : Machine(){};
-  Atm_led& begin( int attached_pin, bool activeLow = false );
+  Atm_led& begin(GpioPinVariable &attached_pin, bool activeLow = false);
   Atm_led& blink( void );
   Atm_led& blink( uint32_t duration );
   Atm_led& blink( uint32_t duration, uint32_t pause_duration, uint16_t repeat_count = ATM_COUNTER_OFF );
@@ -25,7 +25,7 @@ class Atm_led : public Machine {
   Atm_led& toggle( void );
   Atm_led& toggleBlink( void );
   Atm_led& start( void );
-  Atm_led& trace( Stream& stream );
+  Atm_led& trace( Serial0& stream );
   Atm_led& onFinish( Machine& machine, int event = 0 );
   Atm_led& onFinish( atm_cb_push_t callback, int idx = 0 );
   Atm_led& range( int toLow, int toHigh, bool wrap = false );
@@ -49,7 +49,7 @@ class Atm_led : public Machine {
   int event( int id );
   void action( int id );
  protected:
-  short pin;
+  GpioPinVariable pin;
   bool activeLow;
   uint8_t toHigh, toLow;
   bool wrap;

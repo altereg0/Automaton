@@ -1,11 +1,16 @@
 #include "Atm_encoder.hpp"
 #include <limits.h>
+// WMath prototypes
+long random(long);
+long random(long, long);
+void randomSeed(unsigned long);
+long map(long, long, long, long, long);
 
 // Loosely based on https://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino (Oleg Mazurov)
 
 const char Atm_encoder::enc_states[16] = {0, (char)-1, 1, 0, 1, 0, 0, (char)-1, (char)-1, 0, 0, 1, 0, 1, (char)-1, 0};
 
-Atm_encoder& Atm_encoder::begin( int pin1, int pin2, int divider /* = 1 */ ) {
+Atm_encoder& Atm_encoder::begin( GpioPinVariable& pin1, GpioPinVariable& pin2, int divider /* = 1 */ ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*          ON_ENTER     ON_LOOP  ON_EXIT  EVT_UP  EVT_DOWN  ELSE */
@@ -18,10 +23,12 @@ Atm_encoder& Atm_encoder::begin( int pin1, int pin2, int divider /* = 1 */ ) {
   this->pin1 = pin1;
   this->pin2 = pin2;
   this->divider = divider;
-  pinMode( pin1, INPUT );
-  pinMode( pin2, INPUT );
-  digitalWrite( pin1, HIGH );
-  digitalWrite( pin2, HIGH );
+//  pinMode( pin1, INPUT );
+//  pinMode( pin2, INPUT );
+//  digitalWrite( pin1, HIGH );
+//  digitalWrite( pin2, HIGH );
+  setGpioPinModeInputPullupV(pin1);
+  setGpioPinModeInputPullupV(pin2);
   min = INT_MIN;
   max = INT_MAX;
   value = 0;
@@ -41,7 +48,8 @@ int Atm_encoder::event( int id ) {
 void Atm_encoder::action( int id ) {
   switch ( id ) {
     case LP_IDLE:
-      enc_bits = ( ( enc_bits << 2 ) | ( digitalRead( pin1 ) << 1 ) | ( digitalRead( pin2 ) ) ) & 0x0f;
+//      enc_bits = ( ( enc_bits << 2 ) | ( digitalRead( pin1 ) << 1 ) | ( digitalRead( pin2 ) ) ) & 0x0f;
+    enc_bits = ( ( enc_bits << 2 ) | ( readGpioPinDigitalV( pin1 ) << 1 ) | ( readGpioPinDigitalV( pin2 ) ) ) & 0x0f; //TODO: fix
       enc_direction = enc_states[enc_bits];
       if ( enc_direction != 0 ) {
         enc_counter = enc_counter + enc_direction;
@@ -136,7 +144,7 @@ bool Atm_encoder::count( int direction ) {
   return true;
 }
 
-Atm_encoder& Atm_encoder::trace( Stream& stream ) {
+Atm_encoder& Atm_encoder::trace( Serial0& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace, "ENCODER\0EVT_UP\0EVT_DOWN\0ELSE\0IDLE\0UP\0DOWN" );
   return *this;
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Arduino.h"
 
 typedef void ( *atm_cb_push_t )( int idx, int v, int up );
 typedef bool ( *atm_cb_pull_t )( int idx );
@@ -16,16 +15,16 @@ class atm_connector {
       union {
         atm_cb_push_t push_callback;
         atm_cb_pull_t pull_callback;
-      };
+      } cb_type_; //TODO: anonymous struct
       int callback_idx;  // +2 = 5 bytes per connector/object
-    };
+    } cb_callback_; //TODO: anonymous struct
     struct {
       union {
         Machine* machine;
-      };
+      } machine_pt_; //TODO: anonymous struct
       int event;
-    };
-  };
+    } event_; //TODO: anonymous struct
+  } extra_; //TODO: anonymous struct
   void set( Machine* m, int evt, int8_t logOp = 0, int8_t relOp = 0 );
   void set( atm_cb_push_t callback, int idx, int8_t logOp = 0, int8_t relOp = 0 );
   void set( atm_cb_pull_t callback, int idx, int8_t logOp = 0, int8_t relOp = 0 );

@@ -1,6 +1,16 @@
 #include "Atm_led.hpp"
+#include <Pwm.cpp>
+#include <avr/pgmspace.h>
+#include <stdlib.h>
 
-Atm_led& Atm_led::begin( int attached_pin, bool activeLow ) {
+// WMath prototypes
+long random(long);
+long random(long, long);
+void randomSeed(unsigned long);
+long map(long, long, long, long, long);
+
+
+Atm_led &Atm_led::begin(GpioPinVariable &attached_pin, bool activeLow) {
   // clang-format off
   static const state_t state_table[] PROGMEM = {
     /*               ON_ENTER    ON_LOOP    ON_EXIT  EVT_ON_TIMER  EVT_OFF_TIMER EVT_WT_TIMER EVT_COUNTER  EVT_ON  EVT_OFF  EVT_BLINK  EVT_TOGGLE  EVT_TOGGLE_BLINK   ELSE */
@@ -8,20 +18,20 @@ Atm_led& Atm_led::begin( int attached_pin, bool activeLow ) {
     /* ON        */    ENT_ON, ATM_SLEEP,        -1,           -1,            -1,          -1,         -1,     -1,     OFF,  WT_START,        OFF,              OFF,    -1, // LED on
     /* START     */    ENT_ON,        -1,        -1,    BLINK_OFF,            -1,          -1,         -1,  WT_ON,     OFF,        -1,        OFF,              OFF,    -1, // Start blinking
     /* BLINK_OFF */   ENT_OFF,        -1,        -1,           -1,          LOOP,          -1,         -1,  WT_ON,     OFF,        -1,        OFF,              OFF,    -1,
-    /* LOOP      */        -1,        -1,        -1,           -1,            -1,          -1,       DONE,  WT_ON,     OFF,        -1,        OFF,              OFF, START,    
+    /* LOOP      */        -1,        -1,        -1,           -1,            -1,          -1,       DONE,  WT_ON,     OFF,        -1,        OFF,              OFF, START,
     /* DONE      */        -1,        -1, EXT_CHAIN,           -1,           OFF,          -1,         -1,  WT_ON,     OFF,  WT_START,        OFF,              OFF,    -1, // Wait after last blink
     /* OFF       */   ENT_OFF,        -1,        -1,           -1,            -1,          -1,         -1,  WT_ON,     OFF,  WT_START,         -1,               -1,  IDLE, // All off -> IDLE
     /* WT_ON     */        -1,        -1,        -1,           -1,            -1,          ON,         -1,  WT_ON,     OFF,  WT_START,         -1,               -1,    -1, // LEAD for ON
     /* WT_START  */        -1,        -1,        -1,           -1,            -1,       START,         -1,  WT_ON,     OFF,  WT_START,         -1,               -1,    -1, // LEAD for BLINK
-  }; 
+  };
   // clang-format on
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
   this->activeLow = activeLow;
-  level = 255;
-  toLow = 0;
+  level  = 255;
+  toLow  = 0;
   toHigh = 255;
-  wrap = false;
+  wrap   = false;
   initLED();
   on_timer.set( 500 );
   off_timer.set( 500 );
@@ -35,7 +45,7 @@ Atm_led& Atm_led::begin( int attached_pin, bool activeLow ) {
 
 Atm_led& Atm_led::pwm( uint16_t width, float freq ) {
 
-    if ( freq > -1 ) {	
+    if ( freq > -1 ) {
 		this->freq = freq;
 	} else {
 		freq = this->freq;
@@ -149,8 +159,8 @@ Atm_led& Atm_led::blink( void ) {
 }
 
 Atm_led& Atm_led::range( int toLow, int toHigh, bool wrap /* = false */ ) {
-  this->toLow = toLow; 
-  this->toHigh = toHigh; 
+  this->toLow = toLow;
+  this->toHigh = toHigh;
   this->wrap = wrap;
   level = toHigh;
   return *this;
@@ -175,7 +185,7 @@ Atm_led& Atm_led::fade( int fade ) {
 Atm_led& Atm_led::lead( uint32_t ms ) {
   lead_timer.set( ms );
   return *this;
-} 
+}
 
 Atm_led& Atm_led::repeat( uint16_t repeat ) {
   counter.set( repeat_count = repeat );
@@ -195,9 +205,9 @@ int Atm_led::brightness( int level /* = -1 */ ) {
 int Atm_led::brighten( int v ) {
   if ( abs( v ) == 1 ) {
     int br = (int)this->level + v;
-    if ( br > toHigh ) 
+    if ( br > toHigh )
       br = wrap ? toLow : toHigh;
-    if ( br < toLow ) 
+    if ( br < toLow )
       br = wrap ? toHigh : toLow;
     brightness( br );
   }
@@ -213,7 +223,7 @@ Atm_led& Atm_led::trigger( int event ) {
   return *this;
 }
 
-Atm_led& Atm_led::trace( Stream& stream ) {
+Atm_led& Atm_led::trace( Serial0& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "LED\0EVT_ON_TIMER\0EVT_OFF_TIMER\0EVT_WT_TIMER\0EVT_COUNTER\0EVT_ON\0EVT_OFF\0EVT_"
             "BLINK\0EVT_TOGGLE\0EVT_TOGGLE_BLINK\0ELSE\0"
@@ -222,36 +232,46 @@ Atm_led& Atm_led::trace( Stream& stream ) {
 }
 
 void Atm_led::initLED() {
-	pinMode(pin, OUTPUT);
-	digitalWrite(pin, activeLow ? HIGH : LOW);
+//	pinMode(pin, OUTPUT);
+//	digitalWrite(pin, activeLow ? HIGH : LOW);
+  setGpioPinModeOutputV(pin);
+  writeGpioPinDigitalV(pin, activeLow);
+  initPwmTimer1();
 }
 
 void Atm_led::switchOn() {
 	// Never turn if on_timer is zero (duty cycle 0 must be dark)
 	if (on_timer.value == 0) return;
 	if (activeLow) {
-		digitalWrite(pin, LOW);
+//		digitalWrite(pin, LOW);
+        setGpioPinLowV(pin);
 	} else {
 		if (level == toHigh) {
-			digitalWrite(pin, HIGH);
+//			digitalWrite(pin, HIGH);
+            setGpioPinHighV(pin);
 		} else {
-			analogWrite(pin, mapLevel(level));
+//			analogWrite(pin, mapLevel(level));
+            writeGpioPinPwmV(pin, mapLevel(level));
 		}
 	}
 }
 
 void Atm_led::switchOff() {
-	if (!activeLow) {
-		digitalWrite(pin, LOW);
-	} else {
-		if (level == toHigh) {
-			digitalWrite(pin, HIGH);
-		} else {
-			analogWrite(pin, mapLevel(level));
-		}
-	}
+  if (!activeLow) {
+//    digitalWrite(pin, LOW);
+    setGpioPinLowV(pin);
+  } else {
+    if (level == toHigh) {
+//      digitalWrite(pin, HIGH);
+      setGpioPinHighV(pin);
+    } else {
+//      analogWrite(pin, mapLevel(level));
+      writeGpioPinPwmV(pin, mapLevel(level));
+    }
+  }
 }
 
 void Atm_led::setBrightness(int value) {
-	analogWrite( pin, value );
+//	analogWrite( pin, value );
+  writeGpioPinPwmV(pin, level);
 }

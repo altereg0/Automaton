@@ -15,7 +15,7 @@ class Atm_step : public Machine {
   Atm_step( void ) : Machine(){};
   Atm_step& begin( void );
   int state( void );
-  Atm_step& trace( Stream& stream );
+  Atm_step& trace( Serial0& stream );
   Atm_step& onStep( uint8_t idx );  // fix id -> step???
   Atm_step& onStep( uint8_t id, atm_cb_push_t callback, int idx = 0 );
   Atm_step& onStep( uint8_t id, Machine& machine, int event = 0 );

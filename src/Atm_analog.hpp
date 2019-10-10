@@ -8,9 +8,9 @@ class Atm_analog : public Machine {
   enum { EVT_TRIGGER, EVT_TIMER, ELSE };  // EVENTS
 
   Atm_analog( void ) : Machine(){};
-  Atm_analog& begin( int attached_pin, int sampleRate = 50 );
+  Atm_analog& begin( GpioPinVariable& attached_pin, int sampleRate = 50 );
   Atm_analog& average( uint16_t* v, uint16_t size );
-  Atm_analog& trace( Stream& stream );
+  Atm_analog& trace( Serial0& stream );
   int state( void );
   Atm_analog& range( int toLow, int toHigh );
   Atm_analog& onChange( Machine& machine, int event = 0 );
@@ -19,7 +19,7 @@ class Atm_analog : public Machine {
 
  private:
   enum { ENT_SAMPLE, ENT_SEND };  // ACTIONS
-  short pin;
+  GpioPinVariable pin;
   atm_timer_millis timer;
   int v_sample, v_threshold, v_previous;
   atm_connector onchange;

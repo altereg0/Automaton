@@ -13,7 +13,7 @@ class Atm_sweep: public Machine {
 
     Atm_sweep & begin( int p1, int p2, int p3, int p4, int p5, int p6 );
     Atm_sweep & speed( uint32_t v );
-    Atm_sweep & trace( Serial0 & stream );
+    Atm_sweep & trace( Stream & stream );
     
   private:  
     short pin[6];

@@ -17,19 +17,19 @@
  */
 
 bool atm_connector::push( int v /* = 0 */, int up /* = 0 */, bool overrideCallback /* = false */ ) {
-  switch ( mode_flags & B00000111 ) {
+  switch ( mode_flags & 0x07 ) { //0b00000111
     case MODE_PUSHCB:
       if ( overrideCallback ) {
         return false;
       } else {
-        if ( push_callback ) {
-          ( *push_callback )( callback_idx, v, up );
+        if ( extra_.cb_callback_.cb_type_.push_callback ) {
+          ( *extra_.cb_callback_.cb_type_.push_callback )( extra_.cb_callback_.callback_idx, v, up );
         }
       }
       return true;
     case MODE_MACHINE:
-      if ( machine != 0 ) {
-        machine->trigger( event );
+      if ( extra_.event_.machine_pt_.machine != 0 ) {
+        extra_.event_.machine_pt_.machine->trigger( extra_.event_.event );
       }
       return true;
   }
@@ -42,11 +42,11 @@ bool atm_connector::push( int v /* = 0 */, int up /* = 0 */, bool overrideCallba
  */
 
 int atm_connector::pull( int v /* = 0 */, int up /* = 0 */, bool def_value /* = false */ ) {
-  switch ( mode_flags & B00000111 ) {
+  switch ( mode_flags & 0x07 ) { //0b00000111
     case MODE_PULLCB:
-      return ( *pull_callback )( callback_idx );
+      return ( *extra_.cb_callback_.cb_type_.pull_callback )( extra_.cb_callback_.callback_idx );
     case MODE_MACHINE:
-      return machine->state();
+      return extra_.event_.machine_pt_.machine->state();
   }
   return def_value;
 }
@@ -57,7 +57,7 @@ int atm_connector::pull( int v /* = 0 */, int up /* = 0 */, bool def_value /* = 
  */
 
 int8_t atm_connector::logOp( void ) {
-  return ( mode_flags & B00011000 ) >> 3;
+  return ( mode_flags & 0x18 ) >> 3; //0b00011000
 }
 
 /*
@@ -66,7 +66,7 @@ int8_t atm_connector::logOp( void ) {
  */
 
 int8_t atm_connector::relOp( void ) {
-  return ( mode_flags & B11100000 ) >> 5;
+  return ( mode_flags & 0xE0 ) >> 5; //0b11100000
 }
 
 /*
@@ -76,8 +76,8 @@ int8_t atm_connector::relOp( void ) {
 
 void atm_connector::set( atm_cb_push_t callback, int idx, int8_t logOp /* = 0 */, int8_t relOp /* = 0 */ ) {
   mode_flags = MODE_PUSHCB | ( logOp << 3 ) | ( relOp << 5 );
-  push_callback = callback;
-  callback_idx = idx;
+  extra_.cb_callback_.cb_type_.push_callback = callback;
+  extra_.cb_callback_.callback_idx = idx;
 }
 
 /*
@@ -87,8 +87,8 @@ void atm_connector::set( atm_cb_push_t callback, int idx, int8_t logOp /* = 0 */
 
 void atm_connector::set( atm_cb_pull_t callback, int idx, int8_t logOp /* = 0 */, int8_t relOp /* = 0 */ ) {
   mode_flags = MODE_PULLCB | ( logOp << 3 ) | ( relOp << 5 );
-  pull_callback = callback;
-  callback_idx = idx;
+  extra_.cb_callback_.cb_type_.pull_callback = callback;
+  extra_.cb_callback_.callback_idx = idx;
 }
 
 /*
@@ -98,8 +98,8 @@ void atm_connector::set( atm_cb_pull_t callback, int idx, int8_t logOp /* = 0 */
 
 void atm_connector::set( Machine* m, int evt, int8_t logOp /* = 0 */, int8_t relOp /* = 0 */ ) {
   mode_flags = MODE_MACHINE | ( logOp << 3 ) | ( relOp << 5 );
-  machine = m;
-  event = evt;
+  extra_.event_.machine_pt_.machine = m;
+  extra_.event_.event = evt;
 }
 
 /*
@@ -108,5 +108,5 @@ void atm_connector::set( Machine* m, int evt, int8_t logOp /* = 0 */, int8_t rel
  */
 
 int8_t atm_connector::mode( void ) {
-  return mode_flags & B00000111;
+  return mode_flags & 0x07; //0b00000111
 }

@@ -125,7 +125,7 @@ Atm_timer& Atm_timer::toggle( void ) {
   return *this;
 }
 
-Atm_timer& Atm_timer::trace( Stream& stream ) {
+Atm_timer& Atm_timer::trace( Serial0& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "TIMER\0EVT_DAYCNT\0EVT_DAYTIMER\0EVT_MSTIMER\0EVT_REPCNT\0EVT_OFF\0EVT_START\0EVT_TOGGLE\0"
             "ELSE\0IDLE\0START\0WAITD\0WAITMS\0TRIGGER\0FINISH" );

@@ -2,7 +2,7 @@
 
 // Add option for button press callback (for reading i2c buttons etc)
 
-Atm_button& Atm_button::begin( int attached_pin ) {
+Atm_button& Atm_button::begin( GpioPinVariable& attached_pin ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /* Standard Mode: press/repeat */
@@ -145,7 +145,7 @@ Atm_button& Atm_button::autoPress( int delay, int press /* = 1 */ ) {
   return *this;
 }
 
-Atm_button& Atm_button::trace( Stream& stream ) {
+Atm_button& Atm_button::trace( Serial0& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "BUTTON\0EVT_LMODE\0EVT_TIMER\0EVT_DELAY\0EVT_REPEAT\0EVT_PRESS\0EVT_RELEASE\0EVT_COUNTER\0EVT_"
             "AUTO_ST\0ELSE\0IDLE\0WAIT\0PRESSED\0REPEAT\0RELEASE\0LIDLE\0LWAIT\0LPRESSED\0LRELEASE\0WRELEASE\0AUTO" );
@@ -153,13 +153,16 @@ Atm_button& Atm_button::trace( Stream& stream ) {
 }
 
 void Atm_button::initButton() {
-	pinMode( pin, INPUT_PULLUP );
+//	pinMode( pin, INPUT_PULLUP );
+  setGpioPinModeInputPullupV(pin);
 }
 
 bool Atm_button::isPressed() {
-	return !digitalRead( pin );
+//	return !digitalRead( pin );
+  return !readGpioPinDigitalV(pin);
 }
 
 bool Atm_button::isReleased() {
-	return digitalRead( pin );
+//	return digitalRead( pin );
+  return readGpioPinDigitalV(pin);
 }

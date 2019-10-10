@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "Arduino.h"
 
 class atm_counter {
  public:

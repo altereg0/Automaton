@@ -1,6 +1,9 @@
 #include "Atm_command.hpp"
+#include <string.h>
+#include <stdfix.h>
+#include <ctype.h>
 
-Atm_command& Atm_command::begin( Stream& stream, char buffer[], int size ) {
+Atm_command& Atm_command::begin( Serial0& stream, char buffer[], int size ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*                  ON_ENTER    ON_LOOP    ON_EXIT  EVT_INPUT   EVT_EOL   ELSE */
@@ -100,7 +103,7 @@ int Atm_command::lookup( int id, const char* cmdlist ) {
   return -1;
 }
 
-Atm_command& Atm_command::trace( Stream& stream ) {
+Atm_command& Atm_command::trace( Serial0& stream ) {
   setTrace( &stream, atm_serial_debug::trace, "COMMAND\0EVT_INPUT\0EVT_EOL\0ELSE\0IDLE\0READCHAR\0SEND" );
   return *this;
 }

@@ -26,12 +26,14 @@ void Atm_bit::action( int id ) {
   switch ( id ) {
     case ENT_OFF:
       if ( last_state != -1 ) connector[last_state == current ? ON_INPUT_FALSE : ON_CHANGE_FALSE].push( state() );
-      if ( indicator > -1 ) digitalWrite( indicator, !LOW != !indicatorActiveLow );
+//      if ( indicator > -1 ) digitalWrite( indicator, !kDigitalLow != !indicatorActiveLow ); //TODO: fix to xor
+      if ( indicator > -1 ) writeGpioPinDigitalV(pin, !kDigitalLow != !indicatorActiveLow );
       last_state = current;
       return;
     case ENT_ON:
       if ( last_state != -1 ) connector[last_state == current ? ON_INPUT_TRUE : ON_CHANGE_TRUE].push( state() );
-      if ( indicator > -1 ) digitalWrite( indicator, !HIGH != !indicatorActiveLow );
+//      if ( indicator > -1 ) digitalWrite( indicator, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
+    if ( indicator > -1 ) writeGpioPinDigitalV(pin, !kDigitalHigh != !indicatorActiveLow );
       last_state = current;
       return;
     case ENT_REFR_ON:
@@ -70,10 +72,12 @@ Atm_bit& Atm_bit::refresh( void ) {
   return *this;
 }
 
-Atm_bit& Atm_bit::led( int led, bool activeLow /* = false */ ) {
-  indicator = led;
+Atm_bit& Atm_bit::led( GpioPinVariable& led, bool activeLow /* = false */ ) {
+  indicator          = 1;
+  pin                = led;
   indicatorActiveLow = activeLow;
-  pinMode( indicator, OUTPUT );
+//  pinMode( indicator, OUTPUT );
+  setGpioPinModeOutputV(pin);
   return *this;
 }
 
@@ -109,7 +113,7 @@ Atm_bit& Atm_bit::onInput( bool status, Machine& machine, int event /* = 0 */ ) 
   return *this;
 }
 
-Atm_bit& Atm_bit::trace( Stream& stream ) {
+Atm_bit& Atm_bit::trace( Serial0& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace, "BIT\0EVT_ON\0EVT_OFF\0EVT_TOGGLE\0EVT_INPUT\0EVT_REFRESH\0ELSE\0OFF\0ON\0REFR_ON\0REFR_OFF" );
   return *this;
 }

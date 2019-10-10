@@ -1,6 +1,6 @@
 #include "Atm_comparator.hpp"
 
-Atm_comparator& Atm_comparator::begin( int attached_pin, int samplerate /* = 50 */ ) {
+Atm_comparator& Atm_comparator::begin( GpioPinVariable& attached_pin, int samplerate /* = 50 */ ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP  ON_EXIT  EVT_TRIGGER EVT_TIMER   ELSE */
@@ -109,7 +109,8 @@ Atm_comparator& Atm_comparator::skip() {
 }
 
 int Atm_comparator::read_sample() {
-  return analogRead( pin );
+  //return analogRead( pin );
+  return readGpioPinDigitalV(pin); //TODO: fix adc read
 }
 
 int Atm_comparator::avg() {
@@ -165,7 +166,7 @@ Atm_comparator& Atm_comparator::bitmap( uint16_t v ) {
   return *this;
 }
 
-Atm_comparator& Atm_comparator::trace( Stream& stream ) {
+Atm_comparator& Atm_comparator::trace( Serial0& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "EVT_TRIGGER\0EVT_TIMER\0ELSE\0"
             "IDLE\0SAMPLE\0SEND" );

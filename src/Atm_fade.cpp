@@ -1,6 +1,7 @@
 #include "Atm_fade.hpp"
+#include <Pwm.h>
 
-Atm_fade& Atm_fade::begin( int attached_pin ) {
+Atm_fade& Atm_fade::begin( GpioPinVariable& attached_pin ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*               ON_ENTER    ON_LOOP       ON_EXIT  EVT_CNT_FADE EVT_TM_FADE   EVT_TM_ON  EVT_TM_OFF   EVT_CNT_RPT  EVT_ON EVT_OFF EVT_BLINK  EVT_TOGGLE  EVT_TOGGLE_BLINK    ELSE  */
@@ -22,13 +23,15 @@ Atm_fade& Atm_fade::begin( int attached_pin ) {
   // clang-format on
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
-  pinMode( pin, OUTPUT );
+//  pinMode( pin, OUTPUT );
+  setGpioPinModeOutputV(pin); //TODO: fix
   timer_fade.set( 0 );   // Number of ms per slope step (slope duration: rate * 32 ms)
   timer_on.set( 500 );   // Plateau between slopes (in which led is fully on)
   timer_off.set( 500 );  // Pause between slopes (in which led is fully off)
   counter_fade.set( SLOPE_SIZE );
   counter_repeat.set( ATM_COUNTER_OFF );
   repeat_count = ATM_COUNTER_OFF;
+  initPwmTimer1(); //alter
   return *this;
 }
 
@@ -83,24 +86,28 @@ int Atm_fade::event( int id ) {
 void Atm_fade::action( int id ) {
   switch ( id ) {
     case ENT_ON:
-      analogWrite( pin, 255 );
+//      analogWrite( pin, 255 );
+      setGpioPinHighV(pin);
       return;
     case ENT_REPEAT:
       counter_repeat.decrement();
       return;
     case ENT_OFF:
       counter_repeat.set( repeat_count );
-      analogWrite( pin, 0 );
+//      analogWrite( pin, 0 );
+        setGpioPinLowV(pin);
       return;
     case ENT_START:
       counter_fade.set( SLOPE_SIZE );
       return;
     case ENT_UP:
-      analogWrite( pin, slope[SLOPE_SIZE - counter_fade.value] );
+//      analogWrite( pin, slope[SLOPE_SIZE - counter_fade.value] );
+      writeGpioPinPwmV( pin, slope[SLOPE_SIZE - counter_fade.value] );
       counter_fade.decrement();
       return;
     case ENT_DOWN:
-      analogWrite( pin, slope[counter_fade.value - 1] );
+//      analogWrite( pin, slope[counter_fade.value - 1] );
+      writeGpioPinPwmV( pin, slope[counter_fade.value - 1] ); //TODO: fix analog write
       counter_fade.decrement();
       return;
     case ENT_DONE:
@@ -144,7 +151,7 @@ Atm_fade& Atm_fade::onFinish( atm_cb_push_t callback, int idx /* = 0 */ ) {
   return *this;
 }
 
-Atm_fade& Atm_fade::trace( Stream& stream ) {
+Atm_fade& Atm_fade::trace( Serial0& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "FADE\0EVT_CNT_FADE\0EVT_TM_FADE\0EVT_TM_ON\0EVT_TM_OFF\0EVT_CNT_RPT\0EVT_ON\0EVT_OFF\0EVT_BLINK\0EVT_TOGGLE\0EVT_TOGGLE_BLINK\0ELSE\0"
             "IDLE\0ON\0START\0STARTU\0UP\0STARTD\0DOWN\0REPEAT\0DONE\0OSTARTU\0OUP\0OSTARTD\0ODOWN" );

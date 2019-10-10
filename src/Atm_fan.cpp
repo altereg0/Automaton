@@ -81,7 +81,7 @@ Atm_fan& Atm_fan::onInput( atm_cb_push_t callback, int idx ) {
  * Sets the symbol table and the default logging method for serial monitoring
  */
 
-Atm_fan& Atm_fan::trace( Stream& stream ) {
+Atm_fan& Atm_fan::trace( Serial0& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace, "FAN\0EVT_INPUT\0ELSE\0IDLE\0SEND" );
   return *this;
 }
