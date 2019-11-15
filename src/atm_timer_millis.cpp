@@ -6,7 +6,7 @@
  *
  */
 
-void atm_timer_millis::set( uint32_t v ) {
+void atm_timer_millis::set( atm_timer_millis_t v ) {
   value = v;
 }
 
@@ -14,7 +14,7 @@ void atm_timer_millis::set( uint32_t v ) {
  * atm_timer_millis::setFromNow( Machine* machine, uint32_t v ) -
  * Sets the timer to be expired v millis from now
  */
-void atm_timer_millis::setFromNow( Machine* machine, uint32_t v ) {
+void atm_timer_millis::setFromNow( Machine* machine, atm_timer_millis_t v ) {
   value = millis() - machine->state_millis + v;
 }
 

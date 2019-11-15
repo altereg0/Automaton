@@ -11,7 +11,7 @@ class Atm_digital : public Machine {
   enum { EVT_TIMER, EVT_HIGH, EVT_LOW, ELSE };  // EVENTS
 
   Atm_digital( void ) : Machine(){};
-  Atm_digital& begin( GpioPinVariable& pin, int debounce = 20, bool activeLow = false, bool pullUp = false );
+  Atm_digital& begin(GpioPinVariable& pin, atm_timer_millis_t debounce = 20, bool activeLow = false, bool pullUp = false );
   int state( void );
   Atm_digital& onChange( bool status, atm_cb_push_t callback, int idx = 0 );
   Atm_digital& onChange( bool status, Machine& machine, int event = 0 );

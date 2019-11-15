@@ -23,8 +23,7 @@ Atm_fade& Atm_fade::begin( GpioPinVariable& attached_pin ) {
   // clang-format on
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
-//  pinMode( pin, OUTPUT );
-  setGpioPinModeOutputV(pin); //TODO: fix
+  setGpioPinModeOutputV(pin);
   timer_fade.set( 0 );   // Number of ms per slope step (slope duration: rate * 32 ms)
   timer_on.set( 500 );   // Plateau between slopes (in which led is fully on)
   timer_off.set( 500 );  // Pause between slopes (in which led is fully off)
@@ -35,14 +34,14 @@ Atm_fade& Atm_fade::begin( GpioPinVariable& attached_pin ) {
   return *this;
 }
 
-Atm_fade& Atm_fade::blink( uint32_t duration, uint32_t pause_duration, uint16_t repeat_count /* = ATM_COUNTER_OFF */ ) {
+Atm_fade& Atm_fade::blink( atm_timer_millis_t duration, atm_timer_millis_t pause_duration, uint16_t repeat_count /* = ATM_COUNTER_OFF */ ) {
   blink( duration );  // Time in which led is fully on
   pause( pause_duration );
   repeat( repeat_count );
   return *this;
 }
 
-Atm_fade& Atm_fade::blink( uint32_t duration ) {
+Atm_fade& Atm_fade::blink( atm_timer_millis_t duration ) {
   timer_on.set( duration );  // Plateau between slopes (in which led is fully on)
   return *this;
 }
@@ -52,7 +51,7 @@ Atm_fade& Atm_fade::blink( void ) {
   return *this;
 }
 
-Atm_fade& Atm_fade::pause( uint32_t duration ) {  // Pause between slopes (in which led is fully off)
+Atm_fade& Atm_fade::pause( atm_timer_millis_t duration ) {  // Pause between slopes (in which led is fully off)
   timer_off.set( duration ? duration : 1 );       // Make sure off_timer is never 0 (work around)
   return *this;
 }
@@ -86,7 +85,6 @@ int Atm_fade::event( int id ) {
 void Atm_fade::action( int id ) {
   switch ( id ) {
     case ENT_ON:
-//      analogWrite( pin, 255 );
       setGpioPinHighV(pin);
       return;
     case ENT_REPEAT:
@@ -94,20 +92,17 @@ void Atm_fade::action( int id ) {
       return;
     case ENT_OFF:
       counter_repeat.set( repeat_count );
-//      analogWrite( pin, 0 );
-        setGpioPinLowV(pin);
+      setGpioPinLowV(pin);
       return;
     case ENT_START:
       counter_fade.set( SLOPE_SIZE );
       return;
     case ENT_UP:
-//      analogWrite( pin, slope[SLOPE_SIZE - counter_fade.value] );
       writeGpioPinPwmV( pin, slope[SLOPE_SIZE - counter_fade.value] );
       counter_fade.decrement();
       return;
     case ENT_DOWN:
-//      analogWrite( pin, slope[counter_fade.value - 1] );
-      writeGpioPinPwmV( pin, slope[counter_fade.value - 1] ); //TODO: fix analog write
+      writeGpioPinPwmV( pin, slope[counter_fade.value - 1] );
       counter_fade.decrement();
       return;
     case ENT_DONE:

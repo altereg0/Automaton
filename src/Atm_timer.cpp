@@ -5,7 +5,7 @@
 
 #define DIVIDER 86400  // Number of seconds in a 24h day
 
-Atm_timer& Atm_timer::begin( uint32_t ms /* = ATM_TIMER_OFF */, uint16_t repeats /* = 1 */ ) {
+Atm_timer& Atm_timer::begin( atm_timer_millis_t ms /* = ATM_TIMER_OFF */, uint16_t repeats /* = 1 */ ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*               ON_ENTER    ON_LOOP    ON_EXIT  EVT_DAYCNT  EVT_DAYTIMER  EVT_MSTIMER  EVT_REPCNT  EVT_STOP  EVT_START  EVT_TOGGLE   ELSE */
@@ -87,14 +87,14 @@ Atm_timer& Atm_timer::interval_seconds( uint32_t v ) {
   return *this;
 }
 
-Atm_timer& Atm_timer::interval_millis( uint32_t v ) {
+Atm_timer& Atm_timer::interval_millis( atm_timer_millis_t v ) {
   days = 0;
   daycounter.set( days );
   mstimer.set( v );
   return *this;
 }
 
-Atm_timer& Atm_timer::interval( uint32_t v ) {
+Atm_timer& Atm_timer::interval( atm_timer_millis_t v ) {
   return interval_millis( v );
 }
 

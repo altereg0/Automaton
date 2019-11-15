@@ -8,7 +8,7 @@ class Atm_comparator : public Machine {
   enum { EVT_TRIGGER, EVT_TIMER, ELSE };  // EVENTS
 
   Atm_comparator( void ) : Machine(){};
-  Atm_comparator& begin( GpioPinVariable& attached_pin, int sampleRate = 50 );
+  Atm_comparator& begin(GpioPinVariable& attached_pin, atm_timer_millis_t samplerate = 50 );
   Atm_comparator& threshold( uint16_t* v, uint16_t size, bool catchUp = false );
   Atm_comparator& average( uint16_t* v, uint16_t size );
   Atm_comparator& skip();

@@ -141,14 +141,14 @@ Atm_led& Atm_led::onFinish( atm_cb_push_t callback, int idx /* = 0 */ ) {
   return *this;
 }
 
-Atm_led& Atm_led::blink( uint32_t duration, uint32_t pause_duration, uint16_t repeat_count /* = ATM_COUNTER_OFF */ ) {
+Atm_led& Atm_led::blink( atm_timer_millis_t duration, atm_timer_millis_t pause_duration, uint16_t repeat_count /* = ATM_COUNTER_OFF */ ) {
   blink( duration );  // Time in which led is fully on
   pause( pause_duration );
   repeat( repeat_count );
   return *this;
 }
 
-Atm_led& Atm_led::blink( uint32_t duration ) {
+Atm_led& Atm_led::blink( atm_timer_millis_t duration ) {
   on_timer.set( duration );  // Time in which led is fully on
   return *this;
 }

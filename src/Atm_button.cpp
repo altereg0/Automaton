@@ -2,7 +2,7 @@
 
 // Add option for button press callback (for reading i2c buttons etc)
 
-Atm_button& Atm_button::begin( GpioPinVariable& attached_pin ) {
+Atm_button &Atm_button::begin( GpioPinVariable &attached_pin ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /* Standard Mode: press/repeat */
@@ -121,25 +121,25 @@ Atm_button& Atm_button::onRelease( Machine& machine, int event /* = 0 */ ) {
   return *this;
 }
 
-Atm_button& Atm_button::debounce( int delay ) {
+Atm_button& Atm_button::debounce(atm_timer_millis_t delay ) {
   timer_debounce.set( delay );
   return *this;
 }
 
-Atm_button& Atm_button::longPress( int max, int delay ) {
+Atm_button& Atm_button::longPress(int max, atm_timer_millis_t delay ) {
   longpress_max = max;
   counter_longpress.set( longpress_max );
   timer_delay.set( delay );
   return *this;
 }
 
-Atm_button& Atm_button::repeat( int delay /* = 500 */, int speed /* = 50 */ ) {
+Atm_button& Atm_button::repeat(atm_timer_millis_t delay /* = 500 */, atm_timer_millis_t speed /* = 50 */ ) {
   timer_delay.set( delay );
   timer_repeat.set( speed );
   return *this;
 }
 
-Atm_button& Atm_button::autoPress( int delay, int press /* = 1 */ ) {
+Atm_button& Atm_button::autoPress(atm_timer_millis_t delay, int press /* = 1 */ ) {
   auto_press = press;
   timer_auto.set( delay );
   return *this;

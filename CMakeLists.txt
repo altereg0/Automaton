@@ -1,7 +1,6 @@
 #####################################################################
-# AVRTools library
+# Automaton library
 #####################################################################
-#add_compile_definitions( SERIAL_OUTPUT_EOL=\"\\r\\n\" )
 set( AUTOMATON_BASE_SRC_FILES
         src/Atm_analog.cpp
         src/Atm_bit.cpp
@@ -18,7 +17,7 @@ set( AUTOMATON_BASE_SRC_FILES
         src/Atm_led.cpp
         #TODO: FIX player
         #        src/Atm_player.cpp
-#        src/Atm_step.cpp
+        src/Atm_step.cpp
         src/Atm_timer.cpp
         src/atm_timer_millis.cpp
         src/Automaton.cpp
@@ -45,18 +44,3 @@ avr_target_link_libraries(
 
 message( STATUS "AUTOMATON: ${CMAKE_CURRENT_SOURCE_DIR}" )
 message( ">\tCurrent build type: ${CMAKE_BUILD_TYPE}" )
-#####################################################################
-# AVRTools library
-#####################################################################
-
-#set( WSTRING_SRC_FILES
-#        WString.cpp
-#        )
-
-#add_avr_library( wstring ${WSTRING_SRC_FILES} )
-#avr_target_include_common_directories(
-#        wstring PUBLIC
-#        ${CMAKE_CURRENT_SOURCE_DIR}
-#)
-#message( STATUS "WSTRING library: ${CMAKE_CURRENT_SOURCE_DIR}" )
-#message( ">\tCurrent build type: ${CMAKE_BUILD_TYPE}" )

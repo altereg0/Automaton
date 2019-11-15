@@ -1,6 +1,6 @@
 #include "Atm_comparator.hpp"
 
-Atm_comparator& Atm_comparator::begin( GpioPinVariable& attached_pin, int samplerate /* = 50 */ ) {
+Atm_comparator& Atm_comparator::begin(GpioPinVariable& attached_pin, atm_timer_millis_t samplerate /* = 50 */ ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP  ON_EXIT  EVT_TRIGGER EVT_TIMER   ELSE */

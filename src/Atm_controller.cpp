@@ -33,13 +33,13 @@ void Atm_controller::action( int id ) {
     case ENT_OFF:
       connector[last_state == current ? ON_INPUT_FALSE : ON_CHANGE_FALSE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !LOW != !indicatorActiveLow );
-      if ( indicator > -1 ) writeGpioPinDigitalV(pin_, !kDigitalLow != !indicatorActiveLow ); //TODO: fix to xor
+      if ( indicator > -1 ) writeGpioPinDigitalV(pin, !kDigitalLow != !indicatorActiveLow ); //TODO: fix to xor
       last_state = current;
       return;
     case ENT_ON:
       if ( last_state != -1 ) connector[( last_state == current ) ? ON_INPUT_TRUE : ON_CHANGE_TRUE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !HIGH != !indicatorActiveLow );
-      if ( indicator > -1 ) writeGpioPinDigitalV(pin_, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
+      if ( indicator > -1 ) writeGpioPinDigitalV(pin, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
       last_state = current;
       return;
   }
@@ -84,11 +84,11 @@ bool Atm_controller::eval_all() {
 }
 
 Atm_controller& Atm_controller::led( GpioPinVariable& led, bool activeLow /* = false */ ) {
-  indicator = 1;
-  pin_ = led;
+  indicator          = 1;
+  pin                = led;
   indicatorActiveLow = activeLow;
 //  pinMode( indicator, OUTPUT );
-  setGpioPinModeOutputV(pin_);
+  setGpioPinModeOutputV(pin);
   return *this;
 }
 

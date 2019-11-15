@@ -9,10 +9,10 @@ class Atm_led : public Machine {
   enum { EVT_START = EVT_BLINK };
 
   Atm_led( void ) : Machine(){};
-  Atm_led& begin(GpioPinVariable &attached_pin, bool activeLow = false);
+  Atm_led& begin( GpioPinVariable &attached_pin, bool activeLow = false);
   Atm_led& blink( void );
-  Atm_led& blink( uint32_t duration );
-  Atm_led& blink( uint32_t duration, uint32_t pause_duration, uint16_t repeat_count = ATM_COUNTER_OFF );
+  Atm_led& blink( atm_timer_millis_t duration );
+  Atm_led& blink( atm_timer_millis_t duration, atm_timer_millis_t pause_duration, uint16_t repeat_count = ATM_COUNTER_OFF );
   Atm_led& pwm( uint16_t width, float freq = -1 );
   Atm_led& frequency( float freq ); 
   Atm_led& pause( uint32_t duration );

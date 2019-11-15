@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ATM_TIMER_H_
+#define ATM_TIMER_H_
 
 #include <Automaton.h>
 
@@ -8,15 +9,15 @@ class Atm_timer : public Machine {
   enum { EVT_DAYCNT, EVT_DAYTIMER, EVT_MSTIMER, EVT_REPCNT, EVT_STOP, EVT_START, EVT_TOGGLE, ELSE }; // EVT_PAUSE, EVT_RESUME
 
   Atm_timer( void ) : Machine(){};
-  Atm_timer& begin( uint32_t ms = 0, uint16_t repeats = 1 );
+  Atm_timer& begin( atm_timer_millis_t ms = 0, uint16_t repeats = 1 );
   Atm_timer& trace( Serial0& stream );
   Atm_timer& onTimer( atm_cb_push_t callback, int idx = 0 );
   Atm_timer& onTimer( Machine& machine, int event = 0 );
   Atm_timer& onFinish( atm_cb_push_t callback, int idx = 0 );
   Atm_timer& onFinish( Machine& machine, int event = 0 );
   Atm_timer& interval_seconds( uint32_t v );
-  Atm_timer& interval_millis( uint32_t v );
-  Atm_timer& interval( uint32_t v );
+  Atm_timer& interval_millis( atm_timer_millis_t v );
+  Atm_timer& interval( atm_timer_millis_t v );
   uint32_t left();
   Atm_timer& repeat( uint16_t v = ATM_COUNTER_OFF );
   Atm_timer& start( void );
@@ -38,3 +39,5 @@ class Atm_timer : public Machine {
   int event( int id );
   void action( int id );
 };
+
+#endif

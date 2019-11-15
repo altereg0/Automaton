@@ -1,6 +1,6 @@
 #include "Atm_digital.hpp"
 
-Atm_digital& Atm_digital::begin( GpioPinVariable& pin, int debounce /* = 20 */, bool activeLow /* = false */, bool pullUp /* = false */ ) {
+Atm_digital& Atm_digital::begin(GpioPinVariable& pin, atm_timer_millis_t debounce /* = 20 */, bool activeLow /* = false */, bool pullUp /* = false */ ) {
   // clang-format off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP      ON_EXIT  EVT_TIMER   EVT_HIGH  EVT_LOW   ELSE */

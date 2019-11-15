@@ -17,10 +17,10 @@ class Atm_button : public Machine {
   Atm_button& onPress( int id, Machine& machine, int event = 0 );
   Atm_button& onRelease( atm_cb_push_t callback, int idx = 0 );
   Atm_button& onRelease( Machine& machine, int event = 0 );
-  Atm_button& debounce( int delay );
-  Atm_button& longPress( int max, int delay );
-  Atm_button& repeat( int delay = 500, int speed = 50 );
-  Atm_button& autoPress( int delay, int press = 1 );
+  Atm_button& debounce(atm_timer_millis_t delay );
+  Atm_button& longPress(int max, atm_timer_millis_t delay );
+  Atm_button& repeat(atm_timer_millis_t delay = 500, atm_timer_millis_t speed = 50 );
+  Atm_button& autoPress(atm_timer_millis_t delay, int press = 1 );
 
  protected:
   enum { ENT_PRESS, ENT_RELEASE, ENT_LSTART, ENT_LCOUNT, ENT_LRELEASE, EXT_WRELEASE, ENT_AUTO };
