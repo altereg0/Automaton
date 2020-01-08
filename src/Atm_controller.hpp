@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUTOMATON_CONTROLLER_H_
+#define AUTOMATON_CONTROLLER_H_
 
 #include <Automaton.h>
 
@@ -26,7 +27,7 @@ class Atm_controller : public Machine {
   Atm_controller& XOR( Machine& machine, char relOp = '>', int match = 0 );
   Atm_controller& XOR( atm_cb_pull_t callback, int idx = 0 );
   Atm_controller& led( GpioPinVariable& led, bool activeLow = false );
-  Atm_controller& trace( Serial0& stream );
+  Atm_controller& trace( Stream& stream );
 
  private:
   enum { ENT_ON, ENT_OFF };                                                              // ACTIONS
@@ -34,8 +35,7 @@ class Atm_controller : public Machine {
   state_t           last_state;
   atm_connector     connector[_CONN_SIZE_];
   atm_connector     operand[ATM_CONDITION_OPERAND_MAX];
-  int8_t            indicator;
-  GpioPinVariable   pin;
+  GpioPinVariable   indicator;
   bool              indicatorActiveLow;
   const static char relOps[];
 
@@ -46,3 +46,5 @@ class Atm_controller : public Machine {
   bool eval_one( atm_connector& connector );
   bool eval_all();
 };
+
+#endif

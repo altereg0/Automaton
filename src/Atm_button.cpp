@@ -4,6 +4,7 @@
 
 Atm_button &Atm_button::begin( GpioPinVariable &attached_pin ) {
   // clang-format off
+// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /* Standard Mode: press/repeat */
     /*                  ON_ENTER  ON_LOOP       ON_EXIT  EVT_LMODE  EVT_TIMER  EVT_DELAY  EVT_REPEAT EVT_PRESS  EVT_RELEASE  EVT_COUNTER   EVT_AUTO  ELSE */
@@ -20,7 +21,8 @@ Atm_button &Atm_button::begin( GpioPinVariable &attached_pin ) {
     /* WRELEASE */  ENT_LRELEASE,      -1, EXT_WRELEASE,        -1,        -1,        -1,         -1,       -1,       LIDLE,          -1,        -1,    -1,
     /* AUTO_ST   */      ENT_AUTO,      -1,           -1,        -1,        -1,        -1,         -1,       -1,          -1,          -1,        -1,  IDLE,
   };
-  // clang-format on
+  // @formatter:on
+// clang-format on
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
   counter_longpress.set( 0 );
@@ -145,7 +147,7 @@ Atm_button& Atm_button::autoPress(atm_timer_millis_t delay, int press /* = 1 */ 
   return *this;
 }
 
-Atm_button& Atm_button::trace( Serial0& stream ) {
+Atm_button& Atm_button::trace( Stream& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "BUTTON\0EVT_LMODE\0EVT_TIMER\0EVT_DELAY\0EVT_REPEAT\0EVT_PRESS\0EVT_RELEASE\0EVT_COUNTER\0EVT_"
             "AUTO_ST\0ELSE\0IDLE\0WAIT\0PRESSED\0REPEAT\0RELEASE\0LIDLE\0LWAIT\0LPRESSED\0LRELEASE\0WRELEASE\0AUTO" );

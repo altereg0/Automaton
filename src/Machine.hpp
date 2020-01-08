@@ -22,7 +22,7 @@ class Machine {
   Machine& state( int state );
   Machine& begin( const state_t tbl[], int width );
   const char* mapSymbol( int id, const char map[] );
-  Machine& setTrace( Serial0* stream, swcb_sym_t callback, const char symbols[] );
+  Machine& setTrace( Stream* stream, swcb_sym_t callback, const char symbols[] );
   void onPush( atm_connector connectors[], int id, int sub, int slots, int fill, Machine& machine, int event );
   void onPush( atm_connector connectors[], int id, int sub, int slots, int fill, atm_cb_push_t callback, int idx );
   void push( atm_connector connectors[], int id, int sub, int v, int up );
@@ -34,6 +34,6 @@ class Machine {
   const char* symbols;
   uint8_t state_width;
   swcb_sym_t callback_trace;
-  Serial0* stream_trace;
+  Stream* stream_trace;
   uint32_t cycles;
 };

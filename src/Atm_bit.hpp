@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUTOMATON_BIT_H_
+#define AUTOMATON_BIT_H_
 
 #include <Automaton.h>
 
@@ -21,17 +22,18 @@ class Atm_bit : public Machine {
   Atm_bit& toggle( void );
   Atm_bit& input( void );
   Atm_bit& refresh( void );
-  Atm_bit& trace( Serial0& stream );
+  Atm_bit& trace( Stream& stream );
 
  private:
   enum { ENT_ON, ENT_OFF, ENT_REFR_ON, ENT_REFR_OFF };                                                              // ACTIONS
   enum { ON_CHANGE_FALSE, ON_CHANGE_TRUE, ON_INPUT_FALSE, ON_INPUT_TRUE, _CONN_SIZE_ };  // CONNECTORS
   state_t         last_state;
   atm_connector   connector[_CONN_SIZE_];
-  GpioPinVariable pin;
-  short           indicator;
+  GpioPinVariable indicator;
   bool            indicatorActiveLow;
 
   int event( int id );
   void action( int id );
 };
+
+#endif

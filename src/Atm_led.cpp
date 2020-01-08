@@ -12,6 +12,7 @@ long map(long, long, long, long, long);
 
 Atm_led &Atm_led::begin(GpioPinVariable &attached_pin, bool activeLow) {
   // clang-format off
+// @formatter:off
   static const state_t state_table[] PROGMEM = {
     /*               ON_ENTER    ON_LOOP    ON_EXIT  EVT_ON_TIMER  EVT_OFF_TIMER EVT_WT_TIMER EVT_COUNTER  EVT_ON  EVT_OFF  EVT_BLINK  EVT_TOGGLE  EVT_TOGGLE_BLINK   ELSE */
     /* IDLE      */  ENT_INIT, ATM_SLEEP,        -1,           -1,            -1,          -1,         -1,  WT_ON,      -1,  WT_START,         ON,         WT_START,    -1, // LED off
@@ -24,7 +25,9 @@ Atm_led &Atm_led::begin(GpioPinVariable &attached_pin, bool activeLow) {
     /* WT_ON     */        -1,        -1,        -1,           -1,            -1,          ON,         -1,  WT_ON,     OFF,  WT_START,         -1,               -1,    -1, // LEAD for ON
     /* WT_START  */        -1,        -1,        -1,           -1,            -1,       START,         -1,  WT_ON,     OFF,  WT_START,         -1,               -1,    -1, // LEAD for BLINK
   };
-  // clang-format on
+  // @formatter:on// @formatter:on
+// clang-format on
+
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
   this->activeLow = activeLow;
@@ -223,7 +226,7 @@ Atm_led& Atm_led::trigger( int event ) {
   return *this;
 }
 
-Atm_led& Atm_led::trace( Serial0& stream ) {
+Atm_led& Atm_led::trace( Stream& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "LED\0EVT_ON_TIMER\0EVT_OFF_TIMER\0EVT_WT_TIMER\0EVT_COUNTER\0EVT_ON\0EVT_OFF\0EVT_"
             "BLINK\0EVT_TOGGLE\0EVT_TOGGLE_BLINK\0ELSE\0"

@@ -3,13 +3,16 @@
   Published under the MIT License (MIT), Copyright (c) 2015-2016, J.P. van der Landen
 */
 
-#pragma once
+#ifndef AUTOMATON_H_
+#define AUTOMATON_H_
 
 #include <avr/pgmspace.h>
+#include <SystemClock.h>
 #include <ArduinoPins.h>
 #include <USART0.h>
 
 typedef int8_t state_t;
+typedef Serial0 Stream;
 
 const uint8_t ATM_SLEEP_FLAG = 0x01; //0b00000001;
 const uint8_t ATM_CYCLE_FLAG = 0x02; //0b00000010;
@@ -31,8 +34,7 @@ class Automaton;
 
 extern Automaton automaton;
 
-typedef void ( *swcb_sym_t )( Serial0* stream, Machine& machine, const char label[], const char current[], const char next[], const char trigger[],
-                              uint32_t runtime, uint32_t cycles );
+typedef void ( *swcb_sym_t )( Stream* stream, Machine& machine, const char label[], const char current[], const char next[], const char trigger[], millis_t runtime, millis_t cycles );
 
 const uint8_t ATM_UP = 1;
 const uint8_t ATM_DOWN = 0;
@@ -44,13 +46,13 @@ const state_t ATM_ON_ENTER = 0;
 const state_t ATM_ON_LOOP = 1;
 const state_t ATM_ON_EXIT = 2;
 
-const uint32_t ATM_TIMER_OFF = 0xffffffff;  // This timer value never expires
+const millis_t ATM_TIMER_OFF = 0xffffffff;  // This timer value never expires
 const uint16_t ATM_COUNTER_OFF = 0xffff;    // This counter value never expires
 
 class Automaton {
  public:
   Automaton& add( Machine& machine, bool force = true );
-  Automaton& delay( uint32_t time );
+  Automaton& delay( millis_t time );
   Automaton& run( void );
 
  private:
@@ -99,3 +101,5 @@ class Factory : Automaton {
 #include <Atm_step.hpp>
 #include <Atm_player.hpp>
 #include <Atm_timer.hpp>
+
+#endif

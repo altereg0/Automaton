@@ -10,7 +10,7 @@ class Atm_button : public Machine {
 
   Atm_button( void ) : Machine(){};
   Atm_button& begin( GpioPinVariable& attached_pin );
-  Atm_button& trace( Serial0& stream );
+  Atm_button& trace( Stream& stream );
   Atm_button& onPress( atm_cb_push_t callback, int idx = 0 );
   Atm_button& onPress( Machine& machine, int event = 0 );
   Atm_button& onPress( int id, atm_cb_push_t callback, int idx = 0 );

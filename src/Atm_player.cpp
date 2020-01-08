@@ -5,8 +5,9 @@
  * Add extra initialization code
  */
 
-Atm_player& Atm_player::begin( int pin /* = - 1 */ ) {
+Atm_player& Atm_player::begin( GpioPinVariable& pin /* = - 1 */ ) {
   // clang-format off
+// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*             ON_ENTER    ON_LOOP  ON_EXIT  EVT_START  EVT_STOP  EVT_TOGGLE  EVT_TIMER  EVT_EOPAT  EVT_REPEAT   ELSE */
     /*   IDLE */   ENT_IDLE, ATM_SLEEP,      -1,     START,       -1,      START,        -1,        -1,         -1,    -1,
@@ -17,7 +18,8 @@ Atm_player& Atm_player::begin( int pin /* = - 1 */ ) {
     /* REPEAT */ ENT_REPEAT,        -1,      -1,        -1,     IDLE,       IDLE,        -1,        -1,     FINISH, START,
     /* FINISH */ ENT_FINISH,        -1,      -1,        -1,     IDLE,         -1,        -1,        -1,       IDLE, START,
   };
-  // clang-format on
+  // @formatter:on
+// clang-format on
   Machine::begin( state_table, ELSE );
   Atm_player::pin = pin;
   speed( 100 );
@@ -236,7 +238,7 @@ Atm_player& Atm_player::onNote( int sub, atm_cb_push_t callback, int idx ) {
  * Sets the symbol table and the default logging method for serial monitoring
  */
 
-Atm_player& Atm_player::trace( Serial0& stream ) {
+Atm_player& Atm_player::trace( Stream& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace,
                      "PLAYER\0EVT_START\0EVT_STOP\0EVT_TOGGLE\0EVT_TIMER\0EVT_EOPAT\0EVT_REPEAT\0ELSE\0IDLE\0START\0SOUND\0QUIET\0NEXT\0REPEAT\0FINISH" );
   return *this;

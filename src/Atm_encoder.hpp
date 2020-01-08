@@ -9,7 +9,7 @@ class Atm_encoder : public Machine {
 
   Atm_encoder( void ) : Machine(){};
   Atm_encoder& begin( GpioPinVariable& pin1, GpioPinVariable& pin2, int divider = 1 );
-  Atm_encoder& trace( Serial0& stream );
+  Atm_encoder& trace( Stream& stream );
   Atm_encoder& onChange( Machine& machine, int event = 0 );
   Atm_encoder& onChange( atm_cb_push_t callback, int idx = 0 );
   Atm_encoder& onChange( bool status, Machine& machine, int event = 0 );

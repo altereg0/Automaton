@@ -7,6 +7,7 @@
 
 Atm_timer& Atm_timer::begin( atm_timer_millis_t ms /* = ATM_TIMER_OFF */, uint16_t repeats /* = 1 */ ) {
   // clang-format off
+// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*               ON_ENTER    ON_LOOP    ON_EXIT  EVT_DAYCNT  EVT_DAYTIMER  EVT_MSTIMER  EVT_REPCNT  EVT_STOP  EVT_START  EVT_TOGGLE   ELSE */
     /* IDLE    */          -1, ATM_SLEEP,        -1,         -1,           -1,          -1,         -1,       -1,     START,      START,    -1,
@@ -16,7 +17,8 @@ Atm_timer& Atm_timer::begin( atm_timer_millis_t ms /* = ATM_TIMER_OFF */, uint16
     /* TRIGGER */ ENT_TRIGGER,        -1,        -1,         -1,           -1,          -1,     FINISH,     IDLE,     START,       IDLE, START,
     /* FINISH  */  ENT_FINISH,        -1,        -1,         -1,           -1,          -1,         -1,       -1,     START,         -1,  IDLE,
   };
-  // clang-format on
+  // @formatter:on
+// clang-format on
   Machine::begin( state_table, ELSE );
   daytimer.set( (uint32_t)DIVIDER * 1000 );  // Always set to one day
   mstimer.set( ms );
@@ -125,7 +127,7 @@ Atm_timer& Atm_timer::toggle( void ) {
   return *this;
 }
 
-Atm_timer& Atm_timer::trace( Serial0& stream ) {
+Atm_timer& Atm_timer::trace( Stream& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "TIMER\0EVT_DAYCNT\0EVT_DAYTIMER\0EVT_MSTIMER\0EVT_REPCNT\0EVT_OFF\0EVT_START\0EVT_TOGGLE\0"
             "ELSE\0IDLE\0START\0WAITD\0WAITMS\0TRIGGER\0FINISH" );

@@ -18,7 +18,7 @@ class Atm_comparator : public Machine {
   Atm_comparator& onChange( bool status, Machine& machine, int event = 0 );
   int state( void );
   virtual int read_sample();
-  Atm_comparator& trace( Serial0& stream );
+  Atm_comparator& trace( Stream& stream );
 
  private:
   enum { ENT_SAMPLE, ENT_SEND };  // ACTIONS

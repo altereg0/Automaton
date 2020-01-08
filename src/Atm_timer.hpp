@@ -10,7 +10,7 @@ class Atm_timer : public Machine {
 
   Atm_timer( void ) : Machine(){};
   Atm_timer& begin( atm_timer_millis_t ms = 0, uint16_t repeats = 1 );
-  Atm_timer& trace( Serial0& stream );
+  Atm_timer& trace( Stream& stream );
   Atm_timer& onTimer( atm_cb_push_t callback, int idx = 0 );
   Atm_timer& onTimer( Machine& machine, int event = 0 );
   Atm_timer& onFinish( atm_cb_push_t callback, int idx = 0 );

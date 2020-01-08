@@ -25,7 +25,7 @@ class Atm_led : public Machine {
   Atm_led& toggle( void );
   Atm_led& toggleBlink( void );
   Atm_led& start( void );
-  Atm_led& trace( Serial0& stream );
+  Atm_led& trace( Stream& stream );
   Atm_led& onFinish( Machine& machine, int event = 0 );
   Atm_led& onFinish( atm_cb_push_t callback, int idx = 0 );
   Atm_led& range( int toLow, int toHigh, bool wrap = false );

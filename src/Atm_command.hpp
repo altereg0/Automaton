@@ -8,8 +8,8 @@ class Atm_command : public Machine {
   enum { EVT_INPUT, EVT_EOL, ELSE };
 
   Atm_command( void ) : Machine(){};
-  Atm_command& begin( Serial0& stream, char buffer[], int size );
-  Atm_command& trace( Serial0& stream );
+  Atm_command& begin( Stream& stream, char buffer[], int size );
+  Atm_command& trace( Stream& stream );
   Atm_command& onCommand( atm_cb_push_t callback, int idx = 0 );
   Atm_command& list( const char* cmds );
 
@@ -20,7 +20,7 @@ class Atm_command : public Machine {
  private:
   enum { ENT_READCHAR, ENT_SEND };
   atm_connector oncommand;
-  Serial0* stream;
+  Stream* stream;
   char* buffer;
   int bufsize, bufptr;
   char eol, lastch;

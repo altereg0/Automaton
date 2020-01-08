@@ -11,7 +11,7 @@ class Atm_fade : public Machine {
 
   Atm_fade( void ) : Machine(){};
   Atm_fade& begin( GpioPinVariable& attached_pin );
-  Atm_fade& trace( Serial0& stream );
+  Atm_fade& trace( Stream& stream );
   Atm_fade& blink( atm_timer_millis_t duration, atm_timer_millis_t pause_duration, uint16_t repeat_count = ATM_COUNTER_OFF );
   Atm_fade& blink( atm_timer_millis_t duration );
   Atm_fade& blink( void );

@@ -12,13 +12,15 @@ const char Atm_encoder::enc_states[16] = {0, (char)-1, 1, 0, 1, 0, 0, (char)-1, 
 
 Atm_encoder& Atm_encoder::begin( GpioPinVariable& pin1, GpioPinVariable& pin2, int divider /* = 1 */ ) {
   // clang-format off
+// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*          ON_ENTER     ON_LOOP  ON_EXIT  EVT_UP  EVT_DOWN  ELSE */
     /* IDLE  */       -1,    LP_IDLE,      -1,     UP,     DOWN,   -1,
     /* UP    */   ENT_UP,         -1,      -1,     -1,       -1, IDLE,
     /* DOWN  */ ENT_DOWN,         -1,      -1,     -1,       -1, IDLE,
   };
-  // clang-format on
+  // @formatter:on
+// clang-format on
   Machine::begin( state_table, ELSE );
   this->pin1 = pin1;
   this->pin2 = pin2;
@@ -144,7 +146,7 @@ bool Atm_encoder::count( int direction ) {
   return true;
 }
 
-Atm_encoder& Atm_encoder::trace( Serial0& stream ) {
+Atm_encoder& Atm_encoder::trace( Stream& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace, "ENCODER\0EVT_UP\0EVT_DOWN\0ELSE\0IDLE\0UP\0DOWN" );
   return *this;
 }

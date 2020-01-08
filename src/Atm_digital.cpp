@@ -1,7 +1,8 @@
 #include "Atm_digital.hpp"
 
-Atm_digital& Atm_digital::begin(GpioPinVariable& pin, atm_timer_millis_t debounce /* = 20 */, bool activeLow /* = false */, bool pullUp /* = false */ ) {
+Atm_digital& Atm_digital::begin( GpioPinVariable& pin, atm_timer_millis_t debounce /* = 20 */, bool activeLow /* = false */, bool pullUp /* = false */ ) {
   // clang-format off
+// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP      ON_EXIT  EVT_TIMER   EVT_HIGH  EVT_LOW   ELSE */
     /* IDLE    */         -1,        -1,          -1,        -1,     WAITH,      -1,    -1,
@@ -10,12 +11,13 @@ Atm_digital& Atm_digital::begin(GpioPinVariable& pin, atm_timer_millis_t debounc
     /* WAITL   */         -1,        -1,          -1,      VLOW,     VHIGH,      -1,    -1,
     /* VLOW    */    ENT_LOW,        -1,          -1,        -1,        -1,      -1,  IDLE,
   };
-  // clang-format on
+  // @formatter:on
+// clang-format on
   Machine::begin( state_table, ELSE );
   this->pin = pin;
   this->activeLow = activeLow;
   timer.set( debounce );
-  indicator = -1;
+//  indicator = nullotr;
 //  pinMode( pin, pullUp ? INPUT_PULLUP : INPUT );
   if(pullUp) //TODO: fix
     setGpioPinModeInputPullupV(pin);
@@ -43,12 +45,12 @@ void Atm_digital::action( int id ) {
     case ENT_HIGH:
       connection[ON_CHANGE_TRUE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !HIGH != !indicatorActiveLow );
-    if ( indicator > -1 ) writeGpioPinDigitalV(pin, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
+    if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalHigh != !indicatorActiveLow ); //TODO: fix to xor
       return;
     case ENT_LOW:
       connection[ON_CHANGE_FALSE].push( state() );
 //      if ( indicator > -1 ) digitalWrite( indicator, !LOW != !indicatorActiveLow );
-      if ( indicator > -1 ) writeGpioPinDigitalV(pin, !kDigitalLow != !indicatorActiveLow );  //TODO: fix to xor
+      if ( (int) indicator.port() > 0 ) writeGpioPinDigitalV(indicator, !kDigitalLow != !indicatorActiveLow );  //TODO: fix to xor
       return;
   }
 }
@@ -58,11 +60,10 @@ int Atm_digital::state( void ) {
 }
 
 Atm_digital& Atm_digital::led( GpioPinVariable& led, bool activeLow /* = false */ ) {
-  indicator = 1;
-  pin = led;
+  indicator = led;
   indicatorActiveLow = activeLow;
   //pinMode( indicator, OUTPUT );
-  setGpioPinModeOutputV(pin);
+  setGpioPinModeOutputV(indicator);
   return *this;
 }
 
@@ -88,7 +89,7 @@ Atm_digital& Atm_digital::onChange( Machine& machine, int event /* = 0 */ ) {
   return *this;
 }
 
-Atm_digital& Atm_digital::trace( Serial0& stream ) {
+Atm_digital& Atm_digital::trace( Stream& stream ) {
   setTrace( &stream, atm_serial_debug::trace, "DIGITAL\0EVT_TIMER\0EVT_HIGH\0EVT_LOW\0ELSE\0IDLE\0WAITH\0VHIGH\0WAITL\0VLOW" );
   return *this;
 }

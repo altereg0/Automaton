@@ -1,7 +1,7 @@
-#pragma once
+#ifndef AUTOMATON_DIGITAL_H_
+#define AUTOMATON_DIGITAL_H_
 
 #include <Automaton.h>
-
 // Digital pin with a minimum duration in ms
 // On detection another machine is messaged or a callback is fired
 
@@ -18,7 +18,7 @@ class Atm_digital : public Machine {
   Atm_digital& onChange( atm_cb_push_t callback, int idx = 0 );
   Atm_digital& onChange( Machine& machine, int event = 0 );
   Atm_digital& led( GpioPinVariable& led, bool activeLow = false );
-  Atm_digital& trace( Serial0& stream );
+  Atm_digital& trace( Stream& stream );
 
  private:
   enum { ENT_HIGH, ENT_LOW };                             // ACTIONS
@@ -27,9 +27,11 @@ class Atm_digital : public Machine {
   atm_timer_millis timer;
   bool activeLow;
   atm_connector connection[_CONN_SIZE_];
-  int8_t indicator;
+  GpioPinVariable indicator;
   bool indicatorActiveLow;
 
   int event( int id );
   void action( int id );
 };
+
+#endif

@@ -7,12 +7,15 @@
 
 Atm_fan& Atm_fan::begin() {
   // clang-format off
+// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*          ON_ENTER    ON_LOOP  ON_EXIT  EVT_INPUT  ELSE */
     /*  IDLE */       -1, ATM_SLEEP,      -1,      SEND,   -1,
     /*  SEND */ ENT_SEND,        -1,      -1,        -1, IDLE,
   };
-  // clang-format on
+  // @formatter:on
+// clang-format on
+
   Machine::begin( state_table, ELSE );
   return *this;
 }
@@ -81,7 +84,7 @@ Atm_fan& Atm_fan::onInput( atm_cb_push_t callback, int idx ) {
  * Sets the symbol table and the default logging method for serial monitoring
  */
 
-Atm_fan& Atm_fan::trace( Serial0& stream ) {
+Atm_fan& Atm_fan::trace( Stream& stream ) {
   Machine::setTrace( &stream, atm_serial_debug::trace, "FAN\0EVT_INPUT\0ELSE\0IDLE\0SEND" );
   return *this;
 }

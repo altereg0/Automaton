@@ -2,13 +2,15 @@
 
 Atm_comparator& Atm_comparator::begin(GpioPinVariable& attached_pin, atm_timer_millis_t samplerate /* = 50 */ ) {
   // clang-format off
+// @formatter:off
   const static state_t state_table[] PROGMEM = {
     /*              ON_ENTER    ON_LOOP  ON_EXIT  EVT_TRIGGER EVT_TIMER   ELSE */
     /* IDLE   */          -1,        -1,      -1,           -1,   SAMPLE,    -1,
     /* SAMPLE */  ENT_SAMPLE,        -1,      -1,         SEND,       -1,  IDLE,
     /* SEND   */    ENT_SEND,        -1,      -1,           -1,       -1,  IDLE,
   };
-  // clang-format on
+  // @formatter:on
+// clang-format on
   Machine::begin( state_table, ELSE );
   pin = attached_pin;
   timer.set( samplerate );
@@ -166,7 +168,7 @@ Atm_comparator& Atm_comparator::bitmap( uint16_t v ) {
   return *this;
 }
 
-Atm_comparator& Atm_comparator::trace( Serial0& stream ) {
+Atm_comparator& Atm_comparator::trace( Stream& stream ) {
   setTrace( &stream, atm_serial_debug::trace,
             "EVT_TRIGGER\0EVT_TIMER\0ELSE\0"
             "IDLE\0SAMPLE\0SEND" );

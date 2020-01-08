@@ -11,8 +11,8 @@ class Atm_player : public Machine {
   enum { IDLE, START, SOUND, QUIET, NEXT, REPEAT, FINISH };                          // STATES
   enum { EVT_START, EVT_STOP, EVT_TOGGLE, EVT_TIMER, EVT_EOPAT, EVT_REPEAT, ELSE };  // EVENTS
   Atm_player( void ) : Machine(){};
-  Atm_player& begin( int pin = -1 );
-  Atm_player& trace( Serial0& stream );
+  Atm_player& begin( GpioPinVariable& pin );
+  Atm_player& trace( Stream& stream );
   Atm_player& trigger( int event );
   int state( void );
   Atm_player& play( int* pat, int size );
@@ -32,7 +32,7 @@ class Atm_player : public Machine {
   Atm_player& onNote( int sub, atm_cb_push_t callback, int idx = 0 );
 
  private:
-  int pin;
+  GpioPinVariable pin;
   int* pattern16; // Can also be 32 bit on some hardware (teensy 3.x)
   uint32_t* pattern32;
   uint16_t patternsize;
